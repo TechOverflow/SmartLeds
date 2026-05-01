@@ -119,10 +119,16 @@ esp_err_t RmtDriver::init() {
     return ESP_OK;
 }
 
+#if defined(CONFIG_IDF_TARGET_ESP32C6)
+#define MY_RMT_CLK_SRC RMT_CLK_SRC_DEFAULT
+#else
+#define MY_RMT_CLK_SRC RMT_CLK_SRC_APB
+#endif
+
 esp_err_t RmtDriver::registerIsr(bool isFirstRegisteredChannel) {
     rmt_tx_channel_config_t conf = {
         .gpio_num = (gpio_num_t)_pin,
-        .clk_src = RMT_CLK_SRC_APB,
+        .clk_src = MY_RMT_CLK_SRC,
         .resolution_hz = RMT_RESOLUTION_HZ,
         .mem_block_symbols = SOC_RMT_MEM_WORDS_PER_CHANNEL,
         .trans_queue_depth = 1,
