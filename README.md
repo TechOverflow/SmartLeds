@@ -1,4 +1,5 @@
 # SmartLeds
+## With support for ESP32-C5 and C6
 
 Simple & intuitive way to drive various smart LEDs on ESP32.
 
