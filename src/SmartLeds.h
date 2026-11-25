@@ -34,6 +34,7 @@
 
 #include <driver/gpio.h>
 #include <driver/spi_master.h>
+#include <esp_heap_caps.h>
 #include <esp_intr_alloc.h>
 #include <esp_ipc.h>
 #include <freertos/FreeRTOS.h>
@@ -238,12 +239,15 @@ private:
     std::unique_ptr<Rgb[], RgbDeleter> _secondBuffer;
 };
 
-#if defined(CONFIG_IDF_TARGET_ESP32S3) || defined(CONFIG_IDF_TARGET_ESP32C3) || defined(CONFIG_IDF_TARGET_ESP32C5) || defined(CONFIG_IDF_TARGET_ESP32C6)
-#define _SMARTLEDS_SPI_HOST SPI2_HOST
-#define _SMARTLEDS_SPI_DMA_CHAN SPI_DMA_CH_AUTO
-#else
+// HSPI_HOST only exists on ESP32 (= SPI2) and ESP32-S2 (= SPI3); keep those
+// unchanged. Every other chip (S3, C3, C5, C6, P4, H2, ...) uses SPI2 with
+// automatic DMA channel selection.
+#if defined(CONFIG_IDF_TARGET_ESP32) || defined(CONFIG_IDF_TARGET_ESP32S2)
 #define _SMARTLEDS_SPI_HOST HSPI_HOST
 #define _SMARTLEDS_SPI_DMA_CHAN 1
+#else
+#define _SMARTLEDS_SPI_HOST SPI2_HOST
+#define _SMARTLEDS_SPI_DMA_CHAN SPI_DMA_CH_AUTO
 #endif
 
 // Can also handle SK9822

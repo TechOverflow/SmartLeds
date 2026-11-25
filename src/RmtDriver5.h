@@ -18,7 +18,14 @@
 
 namespace SmartLeds::detail {
 
+// Size of the SmartLed-per-channel table (the `channel` constructor argument
+// indexes it; the RMT driver allocates the hardware channel itself).
+// IDF 6 removed SOC_RMT_GROUPS / SOC_RMT_CHANNELS_PER_GROUP from soc_caps.h.
+#if defined(SOC_RMT_GROUPS) && defined(SOC_RMT_CHANNELS_PER_GROUP)
 constexpr const int CHANNEL_COUNT = SOC_RMT_GROUPS * SOC_RMT_CHANNELS_PER_GROUP;
+#else
+constexpr const int CHANNEL_COUNT = 8; // max RMT channels on any current ESP32 chip
+#endif
 
 class RmtDriver;
 

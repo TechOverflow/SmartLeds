@@ -1,9 +1,12 @@
 # SmartLeds
-## With support for ESP32-C5 and C6
 
 Simple & intuitive way to drive various smart LEDs on ESP32.
 
 Requires ESP-IDF >=4.0 and C++17.
+
+This fork (TechOverflow/SmartLeds) tracks [RoboticsBrno/SmartLeds](https://github.com/RoboticsBrno/SmartLeds)
+and adds support for ESP32-C5, ESP32-C6 and ESP32-P4, and for ESP-IDF 6.x
+(arduino-esp32 4.x), on top of the existing ESP32 / S2 / S3 / C3 support.
 
 ## PlatformIO configuration
 
