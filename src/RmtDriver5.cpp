@@ -5,7 +5,7 @@
 
 #include "SmartLeds.h"
 
-namespace detail {
+namespace SmartLeds::detail {
 
 static constexpr const uint32_t RMT_RESOLUTION_HZ = 20 * 1000 * 1000; // 20 MHz
 static constexpr const uint32_t RMT_NS_PER_TICK = 1000000000LLU / RMT_RESOLUTION_HZ;
@@ -119,16 +119,10 @@ esp_err_t RmtDriver::init() {
     return ESP_OK;
 }
 
-#if defined(CONFIG_IDF_TARGET_ESP32C6)
-#define MY_RMT_CLK_SRC RMT_CLK_SRC_DEFAULT
-#else
-#define MY_RMT_CLK_SRC RMT_CLK_SRC_APB
-#endif
-
 esp_err_t RmtDriver::registerIsr(bool isFirstRegisteredChannel) {
     rmt_tx_channel_config_t conf = {
         .gpio_num = (gpio_num_t)_pin,
-        .clk_src = MY_RMT_CLK_SRC,
+        .clk_src = RMT_CLK_SRC_DEFAULT,
         .resolution_hz = RMT_RESOLUTION_HZ,
         .mem_block_symbols = SOC_RMT_MEM_WORDS_PER_CHANNEL,
         .trans_queue_depth = 1,
@@ -178,5 +172,5 @@ esp_err_t RmtDriver::transmit(const Rgb* buffer) {
     rmt_transmit_config_t cfg = {};
     return rmt_transmit(_channel, &_encoder.base, buffer, _count, &cfg);
 }
-};
+} // namespace SmartLeds::detail
 #endif // !SMARTLEDS_NEW_RMT_DRIVER
